@@ -38,6 +38,8 @@ RUN  pip install --upgrade pip \
         gevent \
         gunicorn \
         pycuda \
+        wget \
+        git+https://github.com/NVIDIA/dllogger.git \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /root/.cache
 

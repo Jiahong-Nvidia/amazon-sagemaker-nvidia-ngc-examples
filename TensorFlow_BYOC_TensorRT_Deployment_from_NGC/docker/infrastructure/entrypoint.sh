@@ -12,15 +12,16 @@ then
 
     # download model from ngc
     cd $pretrained_modeldir
-    wget https://api.ngc.nvidia.com/v2/models/nvidia/bert_tf_pretraining_lamb_16n/versions/1/files/model.ckpt-1564.meta
-    wget https://api.ngc.nvidia.com/v2/models/nvidia/bert_tf_pretraining_lamb_16n/versions/1/files/model.ckpt-1564.index
-    wget https://api.ngc.nvidia.com/v2/models/nvidia/bert_tf_pretraining_lamb_16n/versions/1/files/model.ckpt-1564.data-00000-of-00001
-    wget https://api.ngc.nvidia.com/v2/models/nvidia/bert_tf_pretraining_lamb_16n/versions/1/files/bert_config.json
-    wget https://api.ngc.nvidia.com/v2/models/nvidia/bert_tf_pretraining_lamb_16n/versions/1/files/vocab.txt
+    wget --content-disposition https://api.ngc.nvidia.com/v2/models/nvidia/bert_tf_ckpt_large_pretraining_amp_lamb/versions/19.03.1/zip -O bert_tf_ckpt_large_pretraining_amp_lamb_19.03.1.zip
+    
+    unzip bert_tf_ckpt_large_pretraining_amp_lamb_19.03.1.zip
+    rm bert_tf_ckpt_large_pretraining_amp_lamb_19.03.1.zip
 
     # this would be the model script
     cd $training_dir
     git clone https://github.com/NVIDIA/DeepLearningExamples.git
+    cd DeepLearningExamples
+    git checkout cef4bab3fc5aa17f4c95aa2a69a0de72b1209907
     export bert_dir=$training_dir/DeepLearningExamples/TensorFlow/LanguageModeling/BERT
     export BERT_PREP_WORKING_DIR=$bert_dir/data
 
@@ -36,8 +37,8 @@ then
     # get number of V100 gpus
     export num_V100=$(nvidia-smi | grep V100 |wc -l)
     # run fine-tuning
-    # adjust the 0.2 below to run full fine-tuning, such as to 1.5
-    bash scripts/run_bert_squad.sh 5 5e-6 fp16 true $num_V100 384 128 large 1.1 $pretrained_modeldir/model.ckpt-1564 0.2  $finetuned_modeldir true true
+    # adjust the 0.1 below to run full fine-tuning, such as to 1.5
+    bash scripts/run_bert_squad.sh 5 5e-6 fp16 true $num_V100 384 128 large 1.1 $pretrained_modeldir/model.ckpt-1564 0.1  $finetuned_modeldir true true
     
     # we have our fine-tuned model in $finetuned_modeldir, now convert to TRT
     cd $bert_dir/trt 
