@@ -38,7 +38,7 @@ then
     export num_V100=$(nvidia-smi | grep V100 |wc -l)
     # run fine-tuning
     # adjust the 0.1 below to run full fine-tuning, such as to 1.5
-    bash scripts/run_bert_squad.sh 5 5e-6 fp16 true $num_V100 384 128 large 1.1 $pretrained_modeldir/model.ckpt-1564 0.1  $finetuned_modeldir true true
+    bash scripts/run_bert_squad.sh 5 5e-6 fp16 true $num_V100 384 128 large 1.1 $pretrained_modeldir/model.ckp 0.1  $finetuned_modeldir true true
     
     # we have our fine-tuned model in $finetuned_modeldir, now convert to TRT
     cd $bert_dir/trt 
